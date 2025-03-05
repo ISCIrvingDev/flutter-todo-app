@@ -1,5 +1,6 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'components/add_todo.dart';
 
@@ -13,19 +14,39 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> todoList = ['uno', 'dos', 'tres'];
+  List<String> todoList = [];
 
   void addTodo({required String todoText}) {
     setState(() {
       todoList.insert(0, todoText);
     });
 
+    updateLocalData();
+
     Navigator.pop(context);
+  }
+
+  Future<void> updateLocalData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setStringList('todoList', todoList);
+  }
+
+  Future<void> loadData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      todoList = (prefs.getStringList('todoList') ?? []);
+    });
   }
 
   @override
   initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadData();
+    });
   }
 
   @override
@@ -80,6 +101,8 @@ class _HomePageState extends State<HomePage> {
                       setState(() {
                         todoList.removeAt(index);
                       });
+
+                      updateLocalData();
 
                       Navigator.pop(context);
                     },
