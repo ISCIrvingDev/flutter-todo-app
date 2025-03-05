@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'components/add_todo.dart';
+import 'components/todo_list.dart';
 
 class HomePage extends StatefulWidget {
-  // final varType varName;
-
-  const HomePage({super.key /*, this.varName*/});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -104,36 +103,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
     ),
-    body: ListView.builder(
-      itemCount: todoList.length,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          title: Text(todoList[index]),
-          onTap: () {
-            showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(20),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        todoList.removeAt(index);
-                      });
-
-                      updateLocalData();
-
-                      Navigator.pop(context);
-                    },
-                    child: Text('Mark as done!'),
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
-    ),
+    body: TodoList(todoList: todoList, updateLocalData: updateLocalData),
   );
 }
