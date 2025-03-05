@@ -17,6 +17,26 @@ class _HomePageState extends State<HomePage> {
   List<String> todoList = [];
 
   void addTodo({required String todoText}) {
+    if (todoList.contains(todoText)) {
+      showDialog(
+        context: context,
+        builder:
+            (builder) => AlertDialog(
+              title: Text('$todoText already exists!'),
+              actions: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            ),
+      );
+
+      return;
+    }
+
     setState(() {
       todoList.insert(0, todoText);
     });

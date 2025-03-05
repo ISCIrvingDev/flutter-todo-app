@@ -19,6 +19,7 @@ class _AddTodoState extends State<AddTodo> {
         const Text('Todo App'),
         TextField(
           controller: todoText,
+          autofocus: true,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.all(5),
             hintText: 'Write your todo here...',
@@ -27,10 +28,11 @@ class _AddTodoState extends State<AddTodo> {
         SizedBox(height: 5),
         ElevatedButton(
           onPressed: () {
-            print('El valor es: ${todoText.text}');
-            widget.addTodo(todoText: todoText.text);
+            if (todoText.text.isNotEmpty) {
+              widget.addTodo(todoText: todoText.text);
 
-            todoText.text = '';
+              todoText.text = '';
+            }
           },
           child: Text('Add'),
         ),
