@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'components/add_todo.dart';
+import 'components/menu.dart';
 import 'components/todo_list.dart';
 
 class HomePage extends StatefulWidget {
@@ -70,7 +71,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    drawer: Drawer(child: Text('Menu')),
+    drawer: Menu(),
     appBar: AppBar(
       centerTitle: true,
       title: Text('Todo App'),
@@ -79,18 +80,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
             onTap: () {
-              showModalBottomSheet(
-                context: context,
-                builder:
-                    (context) => Padding(
-                      padding: MediaQuery.of(context).viewInsets,
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        height: 250,
-                        child: AddTodo(addTodo: addTodo),
-                      ),
-                    ),
-              );
+              addTodoModal(context);
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -104,5 +94,26 @@ class _HomePageState extends State<HomePage> {
       ],
     ),
     body: TodoList(todoList: todoList, updateLocalData: updateLocalData),
+    floatingActionButton: FloatingActionButton(
+      shape: CircleBorder(),
+      backgroundColor: const Color.fromARGB(255, 32, 32, 32),
+      onPressed: () => addTodoModal(context),
+      child: Icon(Icons.add, color: Colors.white),
+    ),
   );
+
+  Future<dynamic> addTodoModal(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder:
+          (context) => Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              height: 250,
+              child: AddTodo(addTodo: addTodo),
+            ),
+          ),
+    );
+  }
 }
